@@ -63,25 +63,20 @@ const HistoryChart: React.FC<HistoryChartProps> = ({ history }) => {
                     </g>
                 ))}
                 
-                {/* X-axis labels */}
-                {data.map((point, i) => (
-                    <text
-                        key={`x-axis-${point.date}`}
-                        x={getX(i)}
-                        y={height - padding + 20}
-                        textAnchor="middle"
-                        style={textStyle}
-                    >
-                        {new Date(point.date).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })}
-                    </text>
-                ))}
-
                 {/* Data Line */}
                 <path d={linePath} fill="none" stroke="#4f46e5" strokeWidth="2" />
 
                 {/* Data Points with Tooltips */}
                 {data.map((point, i) => (
                     <g key={`point-${point.date}`} className="group" role="tooltip" tabIndex={0} aria-label={`${t('score')}: ${point.overallScore}`}>
+                         <text
+                            x={getX(i)}
+                            y={getY(point.overallScore) - 15}
+                            textAnchor="middle"
+                            style={textStyle}
+                        >
+                            {new Date(point.date).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })}
+                        </text>
                         <circle
                             cx={getX(i)}
                             cy={getY(point.overallScore)}

@@ -18,3 +18,7 @@ export interface AnalysisResult {
   sections: SectionFeedback[];
   keywords: KeywordsResult;
 }
+
+export interface HistoricAnalysisResult extends AnalysisResult {
+  date: number; // timestamp
+}

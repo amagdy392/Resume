@@ -41,6 +41,11 @@ const translations: Record<Language, Record<string, string>> = {
     suggested_keywords: 'Keyword Suggestions',
     keywords_suggestion_intro: 'Consider adding these keywords to better match job descriptions:',
     resume_preview: 'Resume Preview',
+    tooltip_overall_score: 'Scores are color-coded: Green (85+) is great, Yellow (60-84) has room for improvement, and Red (<60) needs significant attention.',
+    tooltip_findings: 'Observations about the current state of this section, highlighting both strengths and weaknesses.',
+    tooltip_suggestions: 'Actionable recommendations to improve this section for better ATS performance.',
+    score_history: 'Score History',
+    score: 'Score',
   },
   ar: {
     title: 'فاحص السيرة الذاتية لـ ATS',
@@ -75,6 +80,11 @@ const translations: Record<Language, Record<string, string>> = {
     suggested_keywords: 'اقتراحات الكلمات المفتاحية',
     keywords_suggestion_intro: 'فكر في إضافة هذه الكلمات المفتاحية لتتناسب بشكل أفضل مع الأوصاف الوظيفية:',
     resume_preview: 'معاينة السيرة الذاتية',
+    tooltip_overall_score: 'الدرجات مرمزة بالألوان: الأخضر (85+) ممتاز، الأصفر (60-84) يحتاج لبعض التحسين، والأحمر (<60) يتطلب اهتمامًا كبيرًا.',
+    tooltip_findings: 'ملاحظات حول الحالة الحالية لهذا القسم، تسلط الضوء على نقاط القوة والضعف.',
+    tooltip_suggestions: 'توصيات عملية لتحسين هذا القسم للحصول على أداء أفضل في أنظمة تتبع المتقدمين.',
+    score_history: 'سجل التقييمات',
+    score: 'التقييم',
   },
 };
 

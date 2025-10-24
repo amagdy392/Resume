@@ -1,13 +1,17 @@
 import React from 'react';
-import type { AnalysisResult, SectionFeedback, KeywordsResult } from '../types';
+import type { AnalysisResult, SectionFeedback, KeywordsResult, HistoricAnalysisResult } from '../types';
 import { useLanguage } from '../hooks/useLocalization';
+import Tooltip from './Tooltip';
+import HistoryChart from './HistoryChart';
 
 interface AnalysisResultsProps {
   result: AnalysisResult;
   onReset: () => void;
+  history: HistoricAnalysisResult[];
 }
 
 const ScoreCircle: React.FC<{ score: number }> = ({ score }) => {
+    const { t } = useLanguage();
     const getScoreColor = (s: number) => {
         if (s >= 85) return 'text-emerald-500';
         if (s >= 60) return 'text-amber-500';
@@ -19,35 +23,37 @@ const ScoreCircle: React.FC<{ score: number }> = ({ score }) => {
     const offset = circumference - (score / 100) * circumference;
 
     return (
-        <div className="relative w-32 h-32 md:w-40 md:h-40">
-            <svg className="w-full h-full" viewBox="0 0 100 100">
-                <circle
-                    className="text-slate-200"
-                    strokeWidth="10"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="45"
-                    cx="50"
-                    cy="50"
-                />
-                <circle
-                    className={`${color} transition-all duration-1000 ease-out`}
-                    strokeWidth="10"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="45"
-                    cx="50"
-                    cy="50"
-                    transform="rotate(-90 50 50)"
-                />
-            </svg>
-            <span className={`absolute inset-0 flex items-center justify-center text-3xl md:text-4xl font-bold ${color}`}>
-                {score}
-            </span>
-        </div>
+        <Tooltip text={t('tooltip_overall_score')}>
+            <div className="relative w-32 h-32 md:w-40 md:h-40">
+                <svg className="w-full h-full" viewBox="0 0 100 100">
+                    <circle
+                        className="text-slate-200"
+                        strokeWidth="10"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="45"
+                        cx="50"
+                        cy="50"
+                    />
+                    <circle
+                        className={`${color} transition-all duration-1000 ease-out`}
+                        strokeWidth="10"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="45"
+                        cx="50"
+                        cy="50"
+                        transform="rotate(-90 50 50)"
+                    />
+                </svg>
+                <span className={`absolute inset-0 flex items-center justify-center text-3xl md:text-4xl font-bold ${color}`}>
+                    {score}
+                </span>
+            </div>
+        </Tooltip>
     );
 };
 
@@ -64,18 +70,24 @@ const SectionCard: React.FC<{ section: SectionFeedback }> = ({ section }) => {
         <div className={`bg-white p-6 rounded-lg border border-slate-200 shadow-sm transition-shadow hover:shadow-md ${getScoreBorderColor(section.score)}`}>
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-slate-800">{section.sectionName}</h3>
-                <span className="text-lg font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">{section.score}/100</span>
+                <Tooltip text={t('tooltip_overall_score')}>
+                    <span className="text-lg font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">{section.score}/100</span>
+                </Tooltip>
             </div>
             
             <div className="mb-4">
-                <h4 className="font-semibold text-slate-700 mb-2 flex items-center"><i className="fas fa-search text-sky-500 ltr:mr-2 rtl:ml-2"></i>{t('findings')}</h4>
+                <Tooltip text={t('tooltip_findings')}>
+                     <h4 className="font-semibold text-slate-700 mb-2 flex items-center w-fit"><i className="fas fa-search text-sky-500 ltr:mr-2 rtl:ml-2"></i>{t('findings')}</h4>
+                </Tooltip>
                 <ul className="list-disc ltr:pl-5 rtl:pr-5 space-y-1 text-slate-600">
                     {section.findings.map((item, index) => <li key={index}>{item}</li>)}
                 </ul>
             </div>
 
             <div>
-                <h4 className="font-semibold text-slate-700 mb-2 flex items-center"><i className="fas fa-lightbulb text-amber-500 ltr:mr-2 rtl:ml-2"></i>{t('suggestions')}</h4>
+                 <Tooltip text={t('tooltip_suggestions')}>
+                    <h4 className="font-semibold text-slate-700 mb-2 flex items-center w-fit"><i className="fas fa-lightbulb text-amber-500 ltr:mr-2 rtl:ml-2"></i>{t('suggestions')}</h4>
+                </Tooltip>
                 <ul className="space-y-2 text-slate-600">
                     {section.suggestions.map((item, index) => (
                         <li key={index} className="flex items-start">
@@ -126,7 +138,7 @@ const KeywordsCard: React.FC<{ keywords: KeywordsResult }> = ({ keywords }) => {
 };
 
 
-const AnalysisResults: React.FC<AnalysisResultsProps> = ({ result, onReset }) => {
+const AnalysisResults: React.FC<AnalysisResultsProps> = ({ result, onReset, history }) => {
     const { t } = useLanguage();
 
     return (
@@ -145,6 +157,13 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ result, onReset }) =>
                     </div>
                 </div>
             </div>
+
+            {history && history.length > 1 && (
+                <div className="mb-8">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('score_history')}</h3>
+                    <HistoryChart history={history} />
+                </div>
+            )}
 
             <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">{t('sections_feedback')}</h3>

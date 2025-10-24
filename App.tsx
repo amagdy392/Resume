@@ -5,8 +5,9 @@ import FileUpload from './components/FileUpload';
 import AnalysisResults from './components/AnalysisResults';
 import Loader from './components/Loader';
 import { analyzeResume } from './services/geminiService';
-import type { AnalysisResult } from './types';
+import type { AnalysisResult, HistoricAnalysisResult } from './types';
 import { fileToBase64 } from './utils/fileReader';
+import { getHistory, saveResultToHistory } from './utils/history';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import PdfViewer from './components/PdfViewer';
@@ -19,11 +20,17 @@ const AppContent: React.FC = () => {
     const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [history, setHistory] = useState<HistoricAnalysisResult[]>([]);
 
     useEffect(() => {
         document.documentElement.lang = language;
         document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
     }, [language]);
+
+    useEffect(() => {
+        // Load history from localStorage on initial render
+        setHistory(getHistory());
+    }, []);
 
     const handleFileSelect = (selectedFile: File) => {
         setError(null);
@@ -58,6 +65,8 @@ const AppContent: React.FC = () => {
             const base64Data = await fileToBase64(file);
             const result = await analyzeResume(base64Data, file.type, language);
             setAnalysisResult(result);
+            saveResultToHistory(result); // Save to localStorage
+            setHistory(getHistory()); // Update history state
         } catch (err) {
             console.error(err);
             if (err instanceof Error) {
@@ -129,7 +138,7 @@ const AppContent: React.FC = () => {
                     {analysisResult && file && (
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 w-full">
                             <div className="lg:col-span-3">
-                                <AnalysisResults result={analysisResult} onReset={resetState} />
+                                <AnalysisResults result={analysisResult} onReset={resetState} history={history} />
                             </div>
                             <div className="lg:col-span-2">
                                 <PdfViewer file={file} />

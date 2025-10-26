@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef } from 'react';
 import { useLanguage } from '../hooks/useLocalization';
 
@@ -96,7 +95,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, onAnalyze, isLoad
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"
-        accept=".pdf"
+        accept=".pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <div className="flex flex-col items-center text-center">
         <i className="fas fa-cloud-upload-alt text-5xl text-indigo-500 mb-4"></i>

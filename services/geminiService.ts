@@ -67,8 +67,9 @@ export const analyzeResume = async (base64Data: string, mimeType: string, langua
         : 'All analysis, feedback, and section names must be in English.';
 
     const systemInstruction = `You are an expert ATS (Applicant Tracking System) resume analyzer. Your task is to review the provided resume and return a detailed analysis in JSON format.
+    - If the provided document is a scanned image or contains non-selectable text, your first step is to perform Optical Character Recognition (OCR) to accurately extract all text content before analysis.
     - Be critical and objective.
-    - Evaluate based on standard ATS parsing rules: clear headings, standard fonts, keyword optimization, and structured data.
+    - Evaluate the resume's content based on standard ATS parsing rules: clear headings, standard fonts, keyword optimization, and structured data.
     - Provide an overall score and a breakdown by standard resume sections (Contact Info, Summary, Experience, Education, Skills, etc.).
     - For each section, provide specific findings and actionable suggestions for improvement.
     - Also, perform a keyword analysis. Identify the key skills and terms present in the resume. Based on the content, suggest other relevant keywords that could be added to improve its chances of passing through an ATS for relevant job roles.

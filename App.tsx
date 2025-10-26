@@ -10,7 +10,6 @@ import { fileToBase64 } from './utils/fileReader';
 import { getHistory, saveResultToHistory } from './utils/history';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import PdfViewer from './components/PdfViewer';
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
@@ -42,7 +41,12 @@ const AppContent: React.FC = () => {
             return;
         }
 
-        if (selectedFile.type !== 'application/pdf') {
+        const ALLOWED_TYPES = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ];
+
+        if (!ALLOWED_TYPES.includes(selectedFile.type)) {
             setError(t('error_file_type'));
             setFile(null);
             return;
@@ -136,13 +140,8 @@ const AppContent: React.FC = () => {
                     )}
 
                     {analysisResult && file && (
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 w-full">
-                            <div className="lg:col-span-3">
-                                <AnalysisResults result={analysisResult} onReset={resetState} history={history} />
-                            </div>
-                            <div className="lg:col-span-2">
-                                <PdfViewer file={file} />
-                            </div>
+                        <div className="w-full max-w-4xl mx-auto">
+                           <AnalysisResults result={analysisResult} onReset={resetState} history={history} />
                         </div>
                     )}
                 </div>
